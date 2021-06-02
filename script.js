@@ -5,7 +5,7 @@ let getUserName = (url) => {
   let userName = getName[1];  
   if (userName == undefined){
     userName = "SergeyN83";
-  }
+  } 
     return userName;
 };
 
@@ -26,7 +26,7 @@ fetch(`https://api.github.com/users/${userName}`)
         console.log(bio);
         console.log(url);
 
-
+        if (name) {
         let modifyName = () => {
             let userName = document.createElement("h1") ;
             userName.innerHTML = name;
@@ -58,5 +58,8 @@ fetch(`https://api.github.com/users/${userName}`)
           modifyBio();
           modifyAvatar();
           modifyUrl();
+        } else {
+            alert('Информация о пользователе не доступна');
+        }
     })
-    .catch(err => alert(err + 'Информация о пользователе не доступна'));
+    .catch(err => alert('Информация о пользователе не доступна'));
