@@ -12,9 +12,20 @@ let getUserName = (url) => {
 let userName = getUserName(url);
 console.log(userName);
 
+let getNewDate = new Promise((resolve, reject) => {
+	let newDate = new Date();
+	setTimeout(() => newDate ? resolve(newDate) : reject('Ошибка в вычислении времени'), 3000);
+});
 
-fetch(`https://api.github.com/users/${userName}`)
-    .then(res => res.json())
+let getUserData = fetch(`https://api.github.com/users/${userName}`);
+
+Promise.all([getUserData, getNewDate])
+    .then(([oneUserData, oneNewDate]) => {
+    	userData = oneUserData;
+    	todayDate = oneNewDate;
+    })
+
+    .then(res => userData.json())
     .then(json => {
         console.log(json);
         let avatar = json.avatar_url;
@@ -26,7 +37,7 @@ fetch(`https://api.github.com/users/${userName}`)
         console.log(bio);
         console.log(url);
 
-        if (avatar) {
+        if (name) {
             let modifyName = () => {
                 let userUrl = document.createElement("a");
                 let userName = document.createElement("h1");
@@ -61,10 +72,20 @@ fetch(`https://api.github.com/users/${userName}`)
                 document.body.appendChild(userUrl);
             };
 
+            let addDate = () => {
+            	let newTodayDate = document.createElement('p');
+            	newTodayDate.innerHTML = todayDate;
+            	document.body.appendChild(newTodayDate);
+            }
+
+            let preloader = document.getElementById('preloader');
+            preloader.classList.add('hidden');
+
             modifyName();
             modifyBio();
             modifyAvatar();
             modifyUrl();
+            addDate();
             } else {
                 alert('Информация о пользователе не доступна');
             }
